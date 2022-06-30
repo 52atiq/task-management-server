@@ -20,11 +20,31 @@ async  function run(){
     try{
         await client.connect()
         const taskCollection = client.db('taskManagement').collection('task')
+
         app.post('/task', async(req, res) =>{
             const newTask = req.body;
             const result = await taskCollection.insertOne(newTask);
             res.send(result)
         })
+
+         //Get all task
+     app.get('/task', async (req,res) =>{
+        const query = {};
+        const cursor = taskCollection.find(query);
+        const tasks= await cursor.toArray();
+        res.send(tasks)
+       })
+
+        //delete task
+     app.delete('/user/:id', async(req, res) => {
+        const id = req.params.id;
+        const query ={_id: ObjectId(id)}
+        const result = await userCollection.deleteOne(query);
+        res.send(result);
+       })
+
+
+
     }
      finally{
 
