@@ -36,12 +36,35 @@ async  function run(){
        })
 
         //delete task
-     app.delete('/user/:id', async(req, res) => {
+     app.delete('/task/:id', async(req, res) => {
         const id = req.params.id;
         const query ={_id: ObjectId(id)}
-        const result = await userCollection.deleteOne(query);
+        const result = await taskCollection.deleteOne(query);
         res.send(result);
        })
+
+       app.get('/task/:id', async (req,res) =>{
+        const id = req.params.id;
+        const query = {_id: ObjectId(id)};
+        const result = await taskCollection.findOne(query);
+        res.send(result);
+       })
+
+        //  update task 
+    app.put('/task/:id', async(req, res) =>{
+        const id = req.params.id;
+        const updatedTask = req.body;
+        const filter = {_id: ObjectId(id)};
+        const options ={upsert : true};
+        const updatedDoc ={
+          $set:{
+            name: updatedTask.name,
+         
+          }
+        }
+        const result = await taskCollection.updateOne(filter, updatedDoc, options);
+        res.send(result)
+      })
 
 
 
