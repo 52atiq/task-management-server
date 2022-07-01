@@ -67,6 +67,25 @@ async  function run(){
       })
 
 
+      app.get("/completed", async (req, res) => {
+        const query = { completed: true };
+        const result = await taskCollection.find(query).toArray();
+        res.send(result);
+      });
+
+      app.put("/completed/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const updatedDoc = {
+          $set: {
+            completed: true,
+          },
+        };
+        const result = await taskCollection.updateOne(query, updatedDoc);
+        res.send(result);
+      });
+
+
 
     }
      finally{
